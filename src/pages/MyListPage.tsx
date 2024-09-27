@@ -40,7 +40,7 @@ const MyListPage = (props: Props) => {
       {backGroundImage && (
         <div
           key={`${userData.savedShows.length}`}
-          className="absolute w-full h-full blur-sm animate-appear "
+          className="absolute w-full h-full blur-sm animate-appear"
         >
           <img
             className="absolute w-full h-full object-cover z-[-1] contrast-125"
