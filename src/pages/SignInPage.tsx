@@ -5,7 +5,7 @@ import { useGlobalContext } from "../shared/context";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const SignInPage = (props: Props) => {
+const SignInPage = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [failedToLogIn, setFailedToLogIn] = useState(false);
