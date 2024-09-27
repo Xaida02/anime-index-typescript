@@ -5,9 +5,7 @@ import SingleAnime from "../components/SingleAnime";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
-type Props = {};
-
-const MyListPage = (props: Props) => {
+const MyListPage = () => {
   const { isUserLogged, loading, userData } = useGlobalContext();
   const [backGroundImage, setBackGroundImage] = useState(null);
 
