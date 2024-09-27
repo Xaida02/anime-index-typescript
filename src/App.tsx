@@ -9,9 +9,8 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import MyListPage from "./pages/MyListPage";
 import AboutPage from "./pages/AboutPage";
-type Props = {};
 
-const App = (props: Props) => {
+const App = () => {
   const [currentPage, setCurrentPage] = useState<Pages>(Pages.home);
   const [isTopOfThePage, setIsTopOfThePage] = useState<boolean>(true);
 

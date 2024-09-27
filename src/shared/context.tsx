@@ -38,7 +38,7 @@ const AppProvider = (props: Props) => {
   const signUp = (email: string, password: string, userName: any) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // user created successfully, write user data to database
+        console.log(userCredential);
         setDoc(doc(db, "users", email), {
           savedShows: [],
           userName: userName,
@@ -53,8 +53,10 @@ const AppProvider = (props: Props) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        console.log(user);
       })
       .catch((error) => {
+        console.log(error);
         // const errorCode = error.code;
         // const errorMessage = error.message;
       });
