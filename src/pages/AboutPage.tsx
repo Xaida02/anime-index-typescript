@@ -1,9 +1,8 @@
 import AboutPageBg from "../assets/AboutPageBg.png";
 import PageLogo from "../assets/AnimeIndexLogo.png";
 import { motion } from "framer-motion";
-type Props = {};
 
-const AboutPage = (props: Props) => {
+const AboutPage = () => {
   return (
     <>
       {/* BACKGROUND IMAGE */}

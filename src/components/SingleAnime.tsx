@@ -4,13 +4,7 @@ import { DocumentCheckIcon, HeartIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { auth, db } from "../shared/firebase";
-import {
-  arrayUnion,
-  doc,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 type Props = {
   name: string;

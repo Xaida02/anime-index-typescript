@@ -4,9 +4,7 @@ import { useRef, useState } from "react";
 import SearchFormBg from "../assets/SearchFormBg.jpg";
 import { motion } from "framer-motion";
 
-type Props = {};
-
-const SearchBar = (props: Props) => {
+const SearchBar = () => {
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   const { setName } = useGlobalContext();

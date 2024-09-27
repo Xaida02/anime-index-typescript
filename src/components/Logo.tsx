@@ -1,9 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import AnimeIndexLogo from "../assets/AnimeIndexLogo.png";
 
-type Props = {};
-
-const Logo = (props: Props) => {
+const Logo = () => {
   const goHome = useNavigate();
 
   return (

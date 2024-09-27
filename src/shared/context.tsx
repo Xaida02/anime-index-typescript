@@ -10,7 +10,6 @@ import { AppContextType, UserData } from "./typeScriptStuff";
 import { db, auth } from "./firebase";
 import {
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";

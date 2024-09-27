@@ -3,9 +3,7 @@ import Loading from "../components/Loading";
 import SearchBar from "../components/SearchBar";
 import { useGlobalContext } from "../shared/context";
 
-type Props = {};
-
-const Home = (props: Props) => {
+const Home = () => {
   const { loading } = useGlobalContext();
 
   return (

@@ -1,10 +1,9 @@
-type Props = {};
 import { Link, useNavigate } from "react-router-dom";
 import SignInUp from "../assets/SignUpPageBg.webp";
 import { useState } from "react";
 import { useGlobalContext } from "../shared/context";
 
-const SignInPage = (props: Props) => {
+const SignInPage = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userUsername, setUsername] = useState("");
   const [userPassword, setUserPassword] = useState("");

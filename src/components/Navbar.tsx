@@ -3,10 +3,8 @@ import {
   EllipsisHorizontalCircleIcon,
   HomeIcon,
   ListBulletIcon,
-  MinusCircleIcon,
   MinusIcon,
   UserIcon,
-  XCircleIcon,
 } from "@heroicons/react/24/solid";
 import { UserIcon as UserIconOutline } from "@heroicons/react/24/outline";
 import { Pages } from "../shared/typeScriptStuff";
@@ -39,7 +37,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
       alert("Please log in to enter this page.");
     }
   };
-  const { isUserLogged, logOut, userData, loading } = useGlobalContext();
+  const { isUserLogged, logOut, userData } = useGlobalContext();
   return (
     <div className=" w-full flex items-center justify-center relative z-30">
       <nav

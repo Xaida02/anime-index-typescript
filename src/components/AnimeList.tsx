@@ -6,9 +6,7 @@ import { useGlobalContext } from "../shared/context";
 import SingleAnime from "./SingleAnime";
 import { motion } from "framer-motion";
 
-type Props = {};
-
-const AnimeList = (props: Props) => {
+const AnimeList = () => {
   const { animeList, name, setName } = useGlobalContext();
 
   return (
