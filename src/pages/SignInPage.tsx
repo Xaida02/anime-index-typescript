@@ -1,4 +1,3 @@
-type Props = {};
 import { Link, useNavigate } from "react-router-dom";
 import SignInBg from "../assets/SignInBg.png";
 import { useGlobalContext } from "../shared/context";
