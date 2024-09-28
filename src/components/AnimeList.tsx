@@ -10,7 +10,10 @@ const AnimeList = () => {
   const { animeList, name, setName } = useGlobalContext();
 
   return (
-    <section className="md:h-auto w-full h-screen p-10 bg-gradient-to-b">
+    <section
+      id="anime-list"
+      className="md:h-auto w-full h-screen p-10 bg-gradient-to-b"
+    >
       <div className="flex w-full justify-between my-6 md:my-4">
         <h4 className="text-xl">
           {name ? (

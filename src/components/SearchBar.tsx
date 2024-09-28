@@ -14,6 +14,10 @@ const SearchBar = () => {
     if (inputRef.current !== null) {
       setName(inputRef.current.value);
     }
+    const animeListSection = document.getElementById("anime-list");
+    if (animeListSection) {
+      animeListSection.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const inputRef = useRef<HTMLInputElement | null>(null);
