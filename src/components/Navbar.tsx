@@ -110,7 +110,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
           </Link>
         </div>
         {/* SIGN BUTTONS */}
-        <div className="after:hidden flex items-center justify-center md:gap-4 text-xs md:text-sm lg:text-base md:place-content-end mx-auto md:mx-0">
+        <div className="after:hidden flex items-center justify-center gap-2 md:gap-4 text-xs md:text-sm lg:text-base md:place-content-end mx-auto md:mx-0">
           {isUserLogged ? (
             <>
               <MotionLink
@@ -123,7 +123,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
               </MotionLink>
               <motion.button
                 whileTap={{ scale: 1.1 }}
-                className="grow md:grow-0 rounded-xl duration-300 transition-colors after:absolute py-1 px-4 md:px-2 flex items-center justify-center gap-2"
+                className="grow md:grow-0 rounded-lg md:rounded-xl duration-300 transition-colors after:absolute py-1 px-4 md:px-2 flex items-center justify-center gap-2"
               >
                 <UserIcon className="size-4 md:size-5 text-emerald-200" />
                 <h4 className="min-w-[50px]">{userData.userName}</h4>
@@ -134,7 +134,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
               <MotionLink
                 to={"/sign-up"}
                 whileTap={{ scale: 1.1 }}
-                className="grow md:grow-0 bg-emerald-200 rounded-xl border-emerald-200 border-2 duration-300 transition-colors hover:text-white after:absolute hover:bg-transparent text-[#121212] py-1 px-4 md:px-2 flex items-center justify-center gap-4 md:gap-2"
+                className="grow md:grow-0 bg-emerald-200 rounded-lg md:rounded-xl border-emerald-200 border-2 duration-300 transition-colors hover:text-white after:absolute hover:bg-transparent text-[#121212] py-1  px-2 flex items-center justify-center gap-2"
               >
                 <UserIconOutline className="size-4 md:size-5" />
                 <h4>Sign Up</h4>
@@ -142,7 +142,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
               <MotionLink
                 to={"/sign-in"}
                 whileTap={{ scale: 1.1 }}
-                className="grow md:grow-0 bg-emerald-200 rounded-xl border-emerald-200 border-2 duration-300 transition-colors hover:text-white after:absolute hover:bg-transparent text-[#121212] py-1 px-4 md:px-2 flex items-center justify-center gap-4 md:gap-2"
+                className="grow md:grow-0 bg-emerald-200 rounded-lg md:rounded-xl border-emerald-200 border-2 duration-300 transition-colors hover:text-white after:absolute hover:bg-transparent text-[#121212] py-1  px-2 flex items-center justify-center gap-2"
               >
                 <UserIcon className="size-4 md:size-5" />
                 <h4>Sign In</h4>
