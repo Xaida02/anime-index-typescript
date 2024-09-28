@@ -43,7 +43,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
       <nav
         // KEY JUST TO TRIGGER A RE-RENDER
         key={`${isTopOfThePage}`}
-        className={`after:hidden top-0 text-white flex md:grid grid-cols-3 transition-all duration-300 p-1 md:p-4 lg:p-2 ${
+        className={`after:hidden top-0 text-white flex md:grid grid-cols-3 transition-all duration-300 px-1 py-3 md:px-4 md:py-4 ${
           isTopOfThePage
             ? "absolute w-full md:w-[95%] animate-shadeIn"
             : "fixed drop-shadow w-full animate-shadeIn bg-[#121212]"
