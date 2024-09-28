@@ -43,7 +43,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
       <nav
         // KEY JUST TO TRIGGER A RE-RENDER
         key={`${isTopOfThePage}`}
-        className={`after:hidden top-0 text-white flex md:grid grid-cols-3 transition-all duration-300 p-4 md:p-2 ${
+        className={`after:hidden top-0 text-white flex md:grid grid-cols-3 transition-all duration-300 p-1 md:p-4 lg:p-2 ${
           isTopOfThePage
             ? "absolute w-full md:w-[95%] animate-shadeIn"
             : "fixed drop-shadow w-full animate-shadeIn bg-[#121212]"
@@ -51,36 +51,31 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
       >
         {/* MOBILE SIDEBAR */}
         <div className="md:hidden flex flex-col mx-auto">
-          <div>
-            <Logo />
-            <div className="flex items-center justify-between gap-2 text-[#59B38E]">
-              <Link to={"/"} onClick={() => setCurrentPage(Pages.home)}>
-                <HomeIcon
-                  className={`size-5 duration-300 ${
-                    currentPage === "home" && "text-emerald-200 scale-125"
-                  }`}
-                />
-              </Link>
-              <MinusIcon />
-              <Link to={"/about"} onClick={() => setCurrentPage(Pages.about)}>
-                <EllipsisHorizontalCircleIcon
-                  className={`size-5 duration-300 ${
-                    currentPage === "about" && "text-emerald-200 scale-125"
-                  }`}
-                />
-              </Link>
-              <MinusIcon />
-              <Link
-                to={"/my-list"}
-                onClick={() => setCurrentPage(Pages.myList)}
-              >
-                <ListBulletIcon
-                  className={`size-5 duration-300 ${
-                    currentPage === "myList" && "text-emerald-200 scale-125"
-                  }`}
-                />
-              </Link>
-            </div>
+          <Logo />
+          <div className="flex items-center justify-between gap-2 text-[#59B38E]">
+            <Link to={"/"} onClick={() => setCurrentPage(Pages.home)}>
+              <HomeIcon
+                className={`size-4 duration-300 ${
+                  currentPage === "home" && "text-emerald-200 scale-125"
+                }`}
+              />
+            </Link>
+            <MinusIcon />
+            <Link to={"/about"} onClick={() => setCurrentPage(Pages.about)}>
+              <EllipsisHorizontalCircleIcon
+                className={`size-4 duration-300 ${
+                  currentPage === "about" && "text-emerald-200 scale-125"
+                }`}
+              />
+            </Link>
+            <MinusIcon />
+            <Link to={"/my-list"} onClick={() => setCurrentPage(Pages.myList)}>
+              <ListBulletIcon
+                className={`size-4 duration-300 ${
+                  currentPage === "myList" && "text-emerald-200 scale-125"
+                }`}
+              />
+            </Link>
           </div>
         </div>
         {/* LOGO AND TITLE */}
@@ -115,7 +110,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
           </Link>
         </div>
         {/* SIGN BUTTONS */}
-        <div className="after:hidden flex items-center justify-center md:gap-4 text-sm md:text-base md:place-content-end mx-auto md:mx-0">
+        <div className="after:hidden flex items-center justify-center md:gap-4 text-xs md:text-sm lg:text-base md:place-content-end mx-auto md:mx-0">
           {isUserLogged ? (
             <>
               <MotionLink
@@ -128,9 +123,9 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
               </MotionLink>
               <motion.button
                 whileTap={{ scale: 1.1 }}
-                className="grow md:grow-0 rounded-xl duration-300 transition-colors after:absolute  py-1 px-4 md:px-2 flex items-center justify-center gap-4 md:gap-2"
+                className="grow md:grow-0 rounded-xl duration-300 transition-colors after:absolute py-1 px-4 md:px-2 flex items-center justify-center gap-2"
               >
-                <UserIcon className="size-5 text-emerald-200" />
+                <UserIcon className="size-4 md:size-5 text-emerald-200" />
                 <h4 className="min-w-[50px]">{userData.userName}</h4>
               </motion.button>
             </>
@@ -141,7 +136,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
                 whileTap={{ scale: 1.1 }}
                 className="grow md:grow-0 bg-emerald-200 rounded-xl border-emerald-200 border-2 duration-300 transition-colors hover:text-white after:absolute hover:bg-transparent text-[#121212] py-1 px-4 md:px-2 flex items-center justify-center gap-4 md:gap-2"
               >
-                <UserIconOutline className="size-5" />
+                <UserIconOutline className="size-4 md:size-5" />
                 <h4>Sign Up</h4>
               </MotionLink>
               <MotionLink
@@ -149,7 +144,7 @@ const Navbar = ({ setCurrentPage, currentPage, isTopOfThePage }: Props) => {
                 whileTap={{ scale: 1.1 }}
                 className="grow md:grow-0 bg-emerald-200 rounded-xl border-emerald-200 border-2 duration-300 transition-colors hover:text-white after:absolute hover:bg-transparent text-[#121212] py-1 px-4 md:px-2 flex items-center justify-center gap-4 md:gap-2"
               >
-                <UserIcon className="size-5" />
+                <UserIcon className="size-4 md:size-5" />
                 <h4>Sign In</h4>
               </MotionLink>
             </>
