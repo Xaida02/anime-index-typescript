@@ -64,7 +64,7 @@ const MyListPage = () => {
           <motion.button
             onClick={() => slide("left")}
             whileTap={{ scale: 1.15 }}
-            className="absolute bottom-1/2 left-1 z-[2] text-emerald-200 duration-300 hover:text-[#59B38E] rounded-full p-1 bg-black/70 md:bg-black/30 animate-appear"
+            className="absolute bottom-1/2 left-1 z-[2] text-emerald-200 duration-300 hover:text-[#59B38E] rounded-full p-1 bg-black/70 md:bg-black/30 animate-appear border-2 border-[#121212]"
           >
             <ChevronLeftIcon className="size-5" />
           </motion.button>
@@ -88,7 +88,7 @@ const MyListPage = () => {
           <motion.button
             onClick={() => slide("right")}
             whileTap={{ scale: 1.15 }}
-            className="absolute bottom-1/2 right-1 z-[2] text-emerald-200 duration-300 hover:text-[#59B38E] rounded-full p-1 bg-black/70 md:bg-black/30 animate-appear"
+            className="absolute bottom-1/2 right-1 z-[2] text-emerald-200 duration-300 hover:text-[#59B38E] rounded-full p-1 bg-black/70 md:bg-black/30 animate-appear border-2 border-[#121212]"
           >
             <ChevronRightIcon className="size-5" />
           </motion.button>
