@@ -80,7 +80,7 @@ const SignInPage = () => {
             <p className="text-sm">Don't have an account yet?</p>
             <Link
               className="text-emerald-200 duration-300 hover:text-[#59B38E]"
-              to={"/"}
+              to={"/sign-up"}
             >
               Sign Up
             </Link>

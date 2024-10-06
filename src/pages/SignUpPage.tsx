@@ -66,12 +66,12 @@ const SignInPage = () => {
             </p>
           </div>
           <div className="flex items-center  justify-between w-full p-2">
-            <p className="text-sm">Don't have an account yet?</p>
+            <p className="text-sm">Already have an account?</p>
             <Link
               className="text-emerald-200 duration-300 hover:text-[#59B38E]"
-              to={"/"}
+              to={"/sign-in"}
             >
-              Sign Up
+              Sign In
             </Link>
           </div>
         </form>
