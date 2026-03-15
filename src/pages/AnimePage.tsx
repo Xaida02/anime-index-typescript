@@ -25,6 +25,21 @@ type Anime = {
   duration: string;
 };
 
+const StatItem = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number;
+}) => (
+  <div className="flex flex-col gap-0.5">
+    <span className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-light">
+      {label}
+    </span>
+    <span className="text-sm text-white/80 font-medium">{value}</span>
+  </div>
+);
+
 const AnimePage = () => {
   const [pageAnime, setPageAnime] = useState<Anime | null>(null);
   const [showMoreDesc, setShowMoreDesc] = useState(false);
@@ -32,207 +47,210 @@ const AnimePage = () => {
   const { loading, setLoading, url, adaptString } = useGlobalContext();
 
   const handleNewPageAnime = (item: any) => {
-    if (item !== null) {
-      return {
-        image: item.images.webp.large_image_url ?? "",
-        trailer: item.trailer.embed_url ?? "",
-        description: item.synopsis ?? "No description available",
-        title: item.title ?? "Unknown title",
-        japaneseTitle: item.title_japanese ?? "Unknown Japanese title",
-        status: item.status ?? "Unknown status",
-        rating: item.rating ?? "No rating",
-        rank: item.rank ?? "Unranked",
-        score: item.score ?? "N/A",
-        scoredBy: item.scored_by ?? 0,
-        year: item.aired?.prop?.from?.year ?? "Unknown",
-        source: item.source ?? "Unknown source",
-        duration: item.duration ?? "Unknown duration",
-        type: item.type ?? "Unknown type",
-        popularity: item.popularity ?? 0,
-        // ARRAYS HERE
-        genres: item.genres?.map((g: any) => g.name).join(", ") || "No genres",
-        studios:
-          item.studios?.map((s: any) => s.name).join(", ") || "No studios",
-        themes: item.themes?.map((t: any) => t.name).join(", ") || "No themes",
-      };
-    } else {
-      return null;
-    }
+    if (!item) return null;
+    return {
+      image: item.images.webp.large_image_url ?? "",
+      trailer: item.trailer.embed_url ?? "",
+      description: item.synopsis ?? "No description available",
+      title: item.title ?? "Unknown title",
+      japaneseTitle: item.title_japanese ?? "Unknown Japanese title",
+      status: item.status ?? "Unknown status",
+      rating: item.rating ?? "No rating",
+      rank: item.rank ?? "Unranked",
+      score: item.score ?? "N/A",
+      scoredBy: item.scored_by ?? 0,
+      year: item.aired?.prop?.from?.year ?? "Unknown",
+      source: item.source ?? "Unknown source",
+      duration: item.duration ?? "Unknown duration",
+      type: item.type ?? "Unknown type",
+      popularity: item.popularity ?? 0,
+      genres: item.genres?.map((g: any) => g.name).join(", ") || "No genres",
+      studios: item.studios?.map((s: any) => s.name).join(", ") || "No studios",
+      themes: item.themes?.map((t: any) => t.name).join(", ") || "No themes",
+    };
   };
 
   const fetchAnimePageData = useCallback(
-    async (link: string, retries: number = 6, delay: number = 1000) => {
+    async (link: string, retries = 6, delay = 1000) => {
       try {
         setLoading(true);
         const response = await fetch(link + animeTitle);
         if (!response.ok) {
-          console.error("Error occurred with status: " + response.status);
           if (retries > 0) {
-            console.log(
-              `Retrying in ${delay / 1000} seconds... (${retries} retries left)`
-            );
-            await new Promise((resolve) => setTimeout(resolve, delay));
+            await new Promise((r) => setTimeout(r, delay));
             return fetchAnimePageData(link, retries - 1, delay * 2);
-          } else {
-            throw new Error(`HTTP error! Status: ${response.status}`);
           }
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const apiData = await response.json();
-        const newAnimeList = apiData.data;
-        //  setCurrentAnime(animeApi.data.find((anime) => anime.title === name));
-        if (newAnimeList) {
-          const target = newAnimeList.find(
-            (anime: any) => anime.mal_id === Number(id)
-          );
-          setPageAnime(handleNewPageAnime(target));
-        } else {
-          setPageAnime(null);
-        }
+        const target = apiData.data?.find(
+          (anime: any) => anime.mal_id === Number(id),
+        );
+        setPageAnime(handleNewPageAnime(target));
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     },
-    [animeTitle, setLoading, setPageAnime, url]
+    [animeTitle, setLoading, url],
   );
 
   useEffect(() => {
     fetchAnimePageData(url);
-  }, [url, fetchAnimePageData, animeTitle]);
+  }, [url, fetchAnimePageData]);
 
-  return loading || pageAnime === null ? (
-    <div className="h-screen flex items-center justify-center">
-      <Loading />
-    </div>
-  ) : (
-    <section className="flex min-h-[100vh] h-auto w-full items-center justify-center my-40 md:my-10">
-      <div className="grid lg:grid-flow-col lg:grid-cols-[repeat(4,300px)] lg:grid-rows-[repeat(3,180px)] gap-4 p-6 w-auto place-content-center my-auto">
-        {/* ANIME PORTRAIT */}
-        <div className="border-2 border-gray-800/10 bg-[#171717] md:row-span-3 rounded-xl overflow-hidden flex md:flex-col">
-          <div className="flex-none md:h-2/3">
-            <img
-              src={pageAnime.image}
-              className="w-[150px] md:w-full md:h-full object-cover"
-              alt=""
-            />
-          </div>
-          <div className="h-full flex justify-between md:justify-center flex-col min-h-fit gap-4 p-6 md:p-4">
-            <p className="text-lg">{pageAnime.title}</p>
-            <p className="text-gray-300/80">{pageAnime.japaneseTitle}</p>
-            <p className="text-[#59B38E]">{pageAnime.genres}</p>
-            <div className="flex justify-between">
-              <p className="text-sm text-gray-300/40">{pageAnime.type}</p>
-              <p className="text-sm text-gray-300/40">{pageAnime.status}</p>
+  if (loading || !pageAnime) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* ATMOSPHERIC BACKGROUND */}
+      <div className="fixed inset-0 z-[-1]">
+        <img
+          src={pageAnime.image}
+          className="w-full h-full object-cover scale-110 blur-2xl opacity-20"
+          alt=""
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#121212]/80 via-[#121212]/90 to-[#121212]" />
+      </div>
+
+      <section className="min-h-screen w-full max-w-[1100px] mx-auto px-6 py-32 md:py-24">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start">
+          {/* LEFT — POSTER */}
+          <div className="flex-none flex flex-col items-center lg:items-start gap-5 w-full lg:w-auto">
+            <div className="relative w-full max-w-[260px] mx-auto lg:mx-0">
+              <img
+                src={pageAnime.image}
+                alt={pageAnime.title}
+                className="w-full rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] object-cover"
+              />
+              {/* STATUS BADGE */}
+              <span
+                className={`absolute top-3 left-3 text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium backdrop-blur-sm
+                ${
+                  pageAnime.status === "Currently Airing"
+                    ? "bg-emerald-200/20 text-emerald-200 border border-emerald-200/30"
+                    : "bg-white/10 text-white/50 border border-white/10"
+                }`}
+              >
+                {pageAnime.status === "Currently Airing"
+                  ? "Airing"
+                  : "Finished"}
+              </span>
+            </div>
+
+            {/* TITLE BLOCK */}
+            <div className="text-center lg:text-left max-w-[260px]">
+              <h1 className="text-xl font-black text-white leading-tight">
+                {pageAnime.title}
+              </h1>
+              <p className="text-sm text-white/35 mt-1">
+                {pageAnime.japaneseTitle}
+              </p>
+              <p className="text-xs text-[#59B38E] mt-2">{pageAnime.genres}</p>
+            </div>
+
+            {/* SCORE HIGHLIGHT */}
+            <div className="flex items-center gap-4 w-full max-w-[260px] bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-3">
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-widest text-white/25">
+                  Score
+                </span>
+                <span className="text-3xl font-black text-emerald-200">
+                  {pageAnime.score}
+                </span>
+              </div>
+              <div className="w-px h-10 bg-white/10" />
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] uppercase tracking-widest text-white/25">
+                  Rank
+                </span>
+                <span className="text-sm font-semibold text-white/60">
+                  #{pageAnime.rank}
+                </span>
+                <span className="text-[10px] text-white/25">
+                  {pageAnime.scoredBy.toLocaleString()} votes
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        {/* STUDIO AND STUFF */}
-        <div className="border-2 border-gray-800/10 bg-[#171717] rounded-lg p-4 grid text-sm">
-          <div className="text-[#59B38E]">
-            Studios:{" "}
-            <p className="text-white/80 inline-block">{pageAnime.studios}</p>
-          </div>
-          <div className="text-[#59B38E]">
-            Year:{" "}
-            <p className="text-white/80 inline-block">
-              {pageAnime.year ? pageAnime.year : "Unknownz"}
-            </p>
-          </div>
-          <div className="text-[#59B38E]">
-            Source:{" "}
-            <p className="text-white/80 inline-block">{pageAnime.source}</p>
-          </div>
-          <div className="text-[#59B38E]">
-            Rating:{" "}
-            <p className="text-white/80 inline-block"> {pageAnime.rating}</p>
-          </div>
-          <div className="text-[#59B38E]">
-            Duration:{" "}
-            <p className="text-white/80 inline-block"> {pageAnime.duration}</p>
-          </div>
-        </div>
-        {/* DON'T KNOW WHAT I'LL BE PUTTING HERE */}
-        <div className="border-2 border-gray-800/10 bg-[#171717] rounded-lg p-4 grid text-sm">
-          <div className="text-[#59B38E]">
-            Score:{" "}
-            <p className="text-white/80 inline-block">{pageAnime.score}</p>
-          </div>
-          <div className="text-[#59B38E]">
-            Scored by:{" "}
-            <p className="text-white/80 inline-block">{pageAnime.scoredBy}</p>
-          </div>
-          <div className="text-[#59B38E]">
-            Rank:{" "}
-            <p className="text-white/80 inline-block">#{pageAnime.rank}</p>
-          </div>
-          <div className="text-[#59B38E]">
-            Popularity:{" "}
-            <p className="text-white/80 inline-block">{pageAnime.popularity}</p>
-          </div>
-          <div className="text-[#59B38E]">
-            Themes:{" "}
-            <p className="text-white/80 inline-block">{pageAnime.themes}</p>
-          </div>
-        </div>
-        {/* ANIME DESCRIPTION */}
-        <div
-          className={`bg-[#171717] md:col-span-1 lg:col-span-3 min-h-full rounded-lg p-4 duration-300 text-sm ${
-            showMoreDesc && "h-fit"
-          }`}
-        >
-          <span className="block text-[#59B38E]"> Description:</span>
-          <div key={`${showMoreDesc}`} className="animate-appear text-white/80">
-            {showMoreDesc ? (
-              <>{pageAnime.description} </>
-            ) : (
-              <>{adaptString(pageAnime.description, 755)} </>
-            )}
-            {/* CONDITION TO HANDLE THE CASE WHERE A SHOW MORE/LESS BTN ISN'T NEED */}
-            {pageAnime.description.length < 755 ? (
-              ""
-            ) : (
-              <button
-                className="inline-block text-emerald-200 hover:underline duration-300"
-                onClick={() => setShowMoreDesc(!showMoreDesc)}
-              >
-                <div className="flex items-center justify-center">
-                  {!showMoreDesc ? (
-                    <>
-                      Show more
-                      <ArrowDownIcon className="size-3 mx-1 inline-block" />
-                    </>
-                  ) : (
-                    <>
-                      Show less
-                      <ArrowUpIcon className="size-3 mx-1 inline-block" />
-                    </>
-                  )}
-                </div>
-              </button>
-            )}
-          </div>
-        </div>
-        {/* ANIME TRAILER */}
-        <div className="border-2 border-gray-800/10 bg-[#171717] md:col-span-2 md:row-span-2 rounded-lg overflow-hidden min-h-[300px] md:min-h-[450px] lg:min-h-full">
-          {pageAnime.trailer ? (
-            <iframe src={pageAnime.trailer} className="w-full h-full" />
-          ) : (
-            <div className="w-full h-full relative flex">
-              <img
-                className="object-cover w-full h-full opacity-10 filter blur-2xl contrast-150 absolute"
-                draggable="false"
-                src={pageAnime.image}
-                alt={`${pageAnime.title} portrait.`}
-              />
-              <p className="m-auto text-lg md:text-xl">
-                Sorry! No trailer available for this anime
+
+          {/* RIGHT — INFO */}
+          <div className="flex-1 flex flex-col gap-8 min-w-0">
+            {/* STATS GRID */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-5 p-5 bg-white/[0.03] border border-white/[0.05] rounded-2xl">
+              <StatItem label="Studio" value={pageAnime.studios} />
+              <StatItem label="Year" value={pageAnime.year} />
+              <StatItem label="Type" value={pageAnime.type} />
+              <StatItem label="Source" value={pageAnime.source} />
+              <StatItem label="Duration" value={pageAnime.duration} />
+              <StatItem label="Rating" value={pageAnime.rating} />
+              <StatItem label="Popularity" value={`#${pageAnime.popularity}`} />
+              <StatItem label="Themes" value={pageAnime.themes || "—"} />
+            </div>
+
+            {/* DESCRIPTION */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <span className="w-4 h-[2px] bg-emerald-200 rounded-full" />
+                <span className="text-[10px] uppercase tracking-[0.2em] text-white/30">
+                  Synopsis
+                </span>
+              </div>
+              <p className="text-sm text-white/60 leading-relaxed">
+                {showMoreDesc
+                  ? pageAnime.description
+                  : adaptString(pageAnime.description, 400)}
+                {pageAnime.description.length > 400 && (
+                  <button
+                    onClick={() => setShowMoreDesc(!showMoreDesc)}
+                    className="inline-flex items-center gap-1 ml-2 text-emerald-200/70 hover:text-emerald-200 transition-colors duration-200 text-xs"
+                  >
+                    {showMoreDesc ? (
+                      <>
+                        <ArrowUpIcon className="size-3" /> Less
+                      </>
+                    ) : (
+                      <>
+                        <ArrowDownIcon className="size-3" /> More
+                      </>
+                    )}
+                  </button>
+                )}
               </p>
             </div>
-          )}
+
+            {/* TRAILER */}
+            <div className="rounded-2xl overflow-hidden border border-white/[0.05] aspect-video w-full">
+              {pageAnime.trailer ? (
+                <iframe
+                  src={pageAnime.trailer}
+                  className="w-full h-full"
+                  allowFullScreen
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-white/[0.02] relative">
+                  <img
+                    src={pageAnime.image}
+                    className="absolute inset-0 w-full h-full object-cover opacity-5 blur-lg"
+                    alt=""
+                  />
+                  <p className="text-white/20 text-sm relative z-10">
+                    No trailer available
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

@@ -1,17 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import AnimeIndexLogo from "../assets/AnimeIndexLogo.png";
+import { motion } from "framer-motion";
 
 const Logo = () => {
   const goHome = useNavigate();
 
   return (
-    <button onClick={() => goHome("/")}>
+    <motion.button
+      onClick={() => goHome("/")}
+      whileHover={{ scale: 1.04 }}
+      whileTap={{ scale: 0.97 }}
+      className="relative group"
+    >
+      {/* glow detrás del logo en hover */}
+      <span className="absolute inset-0 rounded-lg bg-emerald-200/0 group-hover:bg-emerald-200/5 blur-xl transition-all duration-500" />
       <img
-        className="object-cover mx-auto md:mx-0 max-w-[100px] md:max-w-[150px]"
+        className="relative object-contain w-[90px] md:w-[120px] opacity-85 group-hover:opacity-100 transition-opacity duration-300"
         src={AnimeIndexLogo}
-        alt="anime-index-logo"
+        alt="Anime Index"
       />
-    </button>
+    </motion.button>
   );
 };
 

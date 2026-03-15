@@ -7,92 +7,110 @@ import { useEffect, useState } from "react";
 
 const MyListPage = () => {
   const { isUserLogged, loading, userData } = useGlobalContext();
-  const [backGroundImage, setBackGroundImage] = useState(null);
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (userData.savedShows.length) {
-      const randomNumber = Math.floor(
-        Math.random() * userData.savedShows.length
-      );
-      setBackGroundImage(
-        userData.savedShows[randomNumber].images.jpg.large_image_url
+      const random = Math.floor(Math.random() * userData.savedShows.length);
+      setBackgroundImage(
+        userData.savedShows[random].images.jpg.large_image_url,
       );
     }
-    console.log(backGroundImage);
   }, [userData]);
 
   const slide = (direction: "left" | "right") => {
-    let sliderElement = document.getElementById("slider");
-    if (sliderElement && direction === "left") {
-      console.log(sliderElement.scrollLeft);
-      sliderElement.scrollLeft = sliderElement.scrollLeft - 500;
-    }
-    if (sliderElement && direction === "right") {
-      console.log(sliderElement.scrollLeft);
-      sliderElement.scrollLeft = sliderElement.scrollLeft + 500;
-    }
+    const el = document.getElementById("slider");
+    if (el) el.scrollLeft += direction === "left" ? -500 : 500;
   };
 
   return isUserLogged && !loading ? (
     <>
-      {backGroundImage && (
-        <div
-          key={`${userData.savedShows.length}`}
-          className="absolute w-full h-full blur-sm animate-appear"
-        >
+      {/* ATMOSPHERIC BACKGROUND */}
+      <div className="fixed inset-0 z-[-1]">
+        {backgroundImage && (
           <img
-            className="absolute w-full h-full object-cover z-[-1] contrast-125"
-            src={backGroundImage}
-            alt="Background blurred image"
+            key={backgroundImage}
+            src={backgroundImage}
+            className="w-full h-full object-cover scale-110 blur-2xl opacity-25 transition-all duration-700"
+            alt=""
           />
-          <div className="w-full h-full bg-black/90 absolute z-[-1]" />
-        </div>
-      )}
-      <section className="pt-24  md:pt-10 h-full relative">
-        <div className="w-[95%] mt-20 mx-auto">
-          <h2 className="text-2xl md:text-3xl">
-            Your list of saved{" "}
-            <span className="text-emerald-200 inline">Animes</span>
-          </h2>
-          <p className="text-white/80 mt-2">
-            "<span className="text-white">{userData.savedShows.length}</span>"
-            Elements in your list.
-          </p>
-        </div>
-        <div className="relative flex items-center justify-center overflow-hidden">
-          {/* SCROLL LEFT BUTTON */}
-          <motion.button
-            onClick={() => slide("left")}
-            whileTap={{ scale: 1.15 }}
-            className="absolute bottom-1/2 left-1 z-[2] text-emerald-200 duration-300 hover:text-[#59B38E] rounded-full p-1 bg-black/70 md:bg-black/30 animate-appear border-2 border-[#121212]"
-          >
-            <ChevronLeftIcon className="size-5" />
-          </motion.button>
-          <div
-            id="slider"
-            className="h-[450px] my-4 mx-auto w-[95%] grid justify-start auto-cols-[250px] grid-flow-col overflow-hidden gap-8 p-8 relative bg-[#121212]/90 border-2 rounded-xl border-gray-500/10"
-          >
-            {userData.savedShows.map((anime, index) => (
-              <SingleAnime
-                index={index}
-                id={anime.mal_id}
-                key={anime.mal_id}
-                name={anime.title}
-                image={anime.images.webp.large_image_url}
-                genres={anime.genres}
-                japanese={anime.title_japanese}
-              />
-            ))}
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#121212]/70 via-[#121212]/85 to-[#121212]" />
+      </div>
+
+      <section className="min-h-screen w-full max-w-[1400px] mx-auto px-6 md:px-12 py-32">
+        {/* HEADER */}
+        <div className="flex flex-col gap-1 mb-10">
+          <div className="flex items-center gap-3">
+            <span className="w-6 h-[2px] bg-emerald-200 rounded-full" />
+            <span className="text-xs tracking-[0.2em] uppercase text-white/30 font-light">
+              My collection
+            </span>
           </div>
-          {/* SCROLL RIGHT BUTTON */}
-          <motion.button
-            onClick={() => slide("right")}
-            whileTap={{ scale: 1.15 }}
-            className="absolute bottom-1/2 right-1 z-[2] text-emerald-200 duration-300 hover:text-[#59B38E] rounded-full p-1 bg-black/70 md:bg-black/30 animate-appear border-2 border-[#121212]"
-          >
-            <ChevronRightIcon className="size-5" />
-          </motion.button>
+          <div className="flex items-baseline gap-3 mt-1">
+            <h2 className="text-3xl md:text-4xl font-black text-white">
+              My List
+            </h2>
+            <span className="text-sm text-emerald-200/60 font-light">
+              {userData.savedShows.length}{" "}
+              {userData.savedShows.length === 1 ? "title" : "titles"}
+            </span>
+          </div>
         </div>
+
+        {/* SLIDER */}
+        {userData.savedShows.length > 0 ? (
+          <div className="relative px-6">
+            {/* LEFT */}
+            <motion.button
+              onClick={() => slide("left")}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 group/chevron p-2 rounded-full bg-[#1a1a1a] border border-white/[0.08] hover:border-emerald-200/30 hover:bg-emerald-200/5 transition-all duration-300"
+            >
+              <ChevronLeftIcon className="size-4 text-white/25 group-hover/chevron:text-emerald-200/70 transition-colors duration-300" />
+            </motion.button>
+
+            {/* CARDS */}
+            <div
+              id="slider"
+              className="grid auto-cols-[200px] grid-flow-col gap-5 overflow-x-auto scroll-smooth pb-2"
+              style={{ scrollbarWidth: "none" }}
+            >
+              {userData.savedShows.map((anime, index) => (
+                <SingleAnime
+                  index={index}
+                  id={anime.mal_id}
+                  key={anime.mal_id}
+                  name={anime.title}
+                  image={anime.images.webp.large_image_url}
+                  genres={anime.genres}
+                  japanese={anime.title_japanese}
+                />
+              ))}
+            </div>
+
+            {/* RIGHT */}
+            <motion.button
+              onClick={() => slide("right")}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 group/chevron p-2 rounded-full bg-[#1a1a1a] border border-white/[0.08] hover:border-emerald-200/30 hover:bg-emerald-200/5 transition-all duration-300"
+            >
+              <ChevronRightIcon className="size-4 text-white/25 group-hover/chevron:text-emerald-200/70 transition-colors duration-300" />
+            </motion.button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-32 gap-4">
+            <div className="w-10 h-[1px] bg-white/10 rounded-full" />
+            <p className="text-white/25 text-base font-light">
+              Your list is empty
+            </p>
+            <p className="text-white/10 text-xs tracking-wide">
+              Search for anime and save your favorites
+            </p>
+          </div>
+        )}
       </section>
     </>
   ) : (
@@ -101,6 +119,3 @@ const MyListPage = () => {
 };
 
 export default MyListPage;
-{
-  /* HEADER AND STUFF */
-}

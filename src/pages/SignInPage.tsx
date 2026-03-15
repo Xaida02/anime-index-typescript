@@ -15,87 +15,90 @@ const SignInPage = () => {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     await signIn(userEmail, userPassword);
-    if (isUserLogged === false) {
-      setFailedToLogIn(true);
-    }
+    if (!isUserLogged) setFailedToLogIn(true);
   };
 
-  // NAVIGATE TO HOMEPAGE IF THE USER IS LOGGED
   useEffect(() => {
-    if (isUserLogged === true) {
-      navigate("/");
-    }
+    if (isUserLogged) navigate("/");
   }, [isUserLogged]);
 
   return (
-    <section className="w-full h-full min-h-screen relative flex my-16 md:my-0">
-      <div className="m-auto bg-[#121212]/90 min-h-[450px] md:border-2 border-gray-500/30 p-12 rounded-xl">
-        <h1 className="text-2xl py-4">Sign In</h1>
-        <form
-          onSubmit={handleSubmit}
-          action="submit"
-          className="grid gap-4 z-[1]"
-        >
+    <section className="w-full min-h-screen relative flex items-center justify-center">
+      {/* BACKGROUND */}
+      <div className="fixed inset-0 z-[-1]">
+        <img
+          className="w-full h-full object-cover blur-sm scale-105"
+          src={SignInBg}
+          alt=""
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#121212]/60 via-[#121212]/80 to-[#121212]" />
+      </div>
+
+      {/* CARD */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-[400px] mx-4 bg-[#161616]/90 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-8 flex flex-col gap-6"
+      >
+        {/* HEADER */}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="w-4 h-[2px] bg-emerald-200 rounded-full" />
+            <span className="text-[10px] tracking-[0.2em] uppercase text-white/30 font-light">
+              Welcome back
+            </span>
+          </div>
+          <h1 className="text-2xl font-black text-white">Sign In</h1>
+        </div>
+
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
             onChange={(e) => setUserEmail(e.target.value)}
             autoComplete="email"
             placeholder="E-mail"
             required
             type="email"
-            className="duration-300 w-full p-2 focus:outline-none ring-gray-500/40 ring-2 focus:ring-emerald-200 rounded-md bg-[#1b1b1b]"
+            className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.12] focus:border-emerald-200/40 focus:bg-white/[0.06] rounded-xl text-sm text-white placeholder:text-white/25 outline-none transition-all duration-300"
           />
           <input
             onChange={(e) => setUserPassword(e.target.value)}
             placeholder="Password"
             type="password"
-            className="duration-300 w-full p-2 focus:outline-none ring-gray-500/40 ring-2 focus:ring-emerald-200 rounded-md bg-[#1b1b1b]"
+            className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.12] focus:border-emerald-200/40 focus:bg-white/[0.06] rounded-xl text-sm text-white placeholder:text-white/25 outline-none transition-all duration-300"
           />
-          <motion.button
-            type="submit"
-            whileTap={{ scale: 1.028 }}
-            transition={{ duration: 0.1 }}
-            className=" w-full p-2 ring-2 text-[#121212] ring-emerald-200/40 hover:ring-emerald-200 rounded-md bg-emerald-200 hover:bg-transparent transition-colors duration-300 hover:text-white"
-          >
-            Submit
-          </motion.button>
+
           {failedToLogIn && (
             <motion.p
-              className="text-sm text-red-500/70"
-              initial={{ display: "hidden", opacity: 0, height: "0px" }}
-              animate={{ display: "flex", opacity: 1, height: "auto" }}
-              transition={{ delay: 2, duration: 0.3 }}
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-xs text-red-400/70 px-1"
             >
               Incorrect email or password.
             </motion.p>
           )}
-          <div className="flex justify-between w-full p-2 text-sm">
-            <p className="flex items-center gap-2">
-              Remember me <input type="checkbox" />
-            </p>
-            <p className="text-gray-400 cursor-pointer select-none">
-              Need help?
-            </p>
-          </div>
-          <div className="flex items-center  justify-between w-full p-2">
-            <p className="text-sm">Don't have an account yet?</p>
-            <Link
-              className="text-emerald-200 duration-300 hover:text-[#59B38E]"
-              to={"/sign-up"}
-            >
-              Sign Up
-            </Link>
-          </div>
+
+          <motion.button
+            type="submit"
+            whileTap={{ scale: 0.98 }}
+            className="w-full py-3 mt-1 bg-emerald-200 hover:bg-emerald-300 text-[#121212] font-semibold text-sm rounded-xl transition-colors duration-300"
+          >
+            Sign In
+          </motion.button>
         </form>
-      </div>
-      {/* BLURRED IMAGE BACKROUND */}
-      <div className="w-full h-full absolute z-[-1] overflow-hidden animate-appear">
-        <img
-          className="w-full h-full object-fill absolute z-[-3] filter blur-sm"
-          src={SignInBg}
-          alt="Blurred background cover"
-        />
-        <div className="w-full h-full z-[-2] absolute bg-[#121212] md:bg-black/80" />
-      </div>
+
+        {/* FOOTER */}
+        <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+          <p className="text-xs text-white/25">Don't have an account?</p>
+          <Link
+            to="/sign-up"
+            className="text-xs text-emerald-200/70 hover:text-emerald-200 transition-colors duration-300"
+          >
+            Sign Up
+          </Link>
+        </div>
+      </motion.div>
     </section>
   );
 };

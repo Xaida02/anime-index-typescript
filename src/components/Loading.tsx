@@ -1,13 +1,37 @@
-import { ThreeDots } from "react-loader-spinner";
-
-// type Props = {};
+import { motion } from "framer-motion";
 
 const Loading = () => {
   return (
-    <section className="h-screen my-20 md:h-auto flex w-screen">
-      <div className="m-auto text-[40px] flex items-center gap-4 animate-pulse">
-        <p className="inline-block text-emerald-200"> LOADING</p>{" "}
-        <ThreeDots color="#A7F3D0" />
+    <section className="h-screen w-screen flex items-center justify-center">
+      <div className="flex flex-col items-center gap-6">
+        {/* TRES BARRAS ANIMADAS */}
+        <div className="flex items-end gap-1.5 h-8">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <motion.span
+              key={i}
+              className="w-1 rounded-full bg-emerald-200"
+              animate={{
+                height: ["8px", "32px", "8px"],
+                opacity: [0.3, 1, 0.3],
+              }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                delay: i * 0.12,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* TEXTO */}
+        <motion.p
+          animate={{ opacity: [0.3, 0.7, 0.3] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="text-xs tracking-[0.3em] uppercase text-white/30 font-light"
+        >
+          Loading
+        </motion.p>
       </div>
     </section>
   );

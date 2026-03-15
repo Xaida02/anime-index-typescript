@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../shared/context";
-import { DocumentCheckIcon, HeartIcon } from "@heroicons/react/24/solid";
+import { HeartIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { auth, db } from "../shared/firebase";
@@ -15,17 +15,11 @@ type Props = {
   id: number;
 };
 
-// STAGGERED APPEAR-IN ANIMATIONS
 const variantsForStaggeredAnimations = {
-  initial: {
-    opacity: 0,
-    y: 50,
-    blur: 2,
-  },
+  initial: { opacity: 0, y: 50 },
   animate: (index: number) => ({
     opacity: 1,
     y: 0,
-    blur: 0,
     transition: { delay: 0.03 * index },
   }),
 };
@@ -35,133 +29,108 @@ const SingleAnime = ({ name, image, genres, japanese, id, index }: Props) => {
   const { formatToLinkType, adaptString, animeList, userData, isUserLogged } =
     useGlobalContext();
 
-  const genresElementsToString = genres.map((item) => item.name).join(", ");
-  const handleAddToMyAnimeList = (
-    animeId: number,
-    e: { preventDefault: () => void }
-  ) => {
+  const genresString = genres.map((item) => item.name).join(", ");
+
+  const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (isUserLogged) {
-      const savedAnime: any = animeList.find((anime) => {
-        return anime.mal_id === animeId;
+    if (!isUserLogged) return alert("Please log in to save an anime.");
+    const savedAnime = animeList.find((anime) => anime.mal_id === id);
+    const user = auth.currentUser;
+    if (user?.email) {
+      updateDoc(doc(db, "users", user.email), {
+        savedShows: arrayUnion(savedAnime),
       });
-      const user = auth.currentUser;
-      if (user && user.email) {
-        updateDoc(doc(db, "users", user.email), {
-          savedShows: arrayUnion(savedAnime),
-        });
-      }
-    } else {
-      alert("Please log in to save an anime.");
     }
   };
-  const handleRemoveFromMyAnimeList = (
-    animeId: number,
-    e: { preventDefault: () => void }
-  ) => {
+
+  const handleRemove = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (isUserLogged) {
-      const filteredAnimeArray: Array<Object> = userData.savedShows.filter(
-        (anime: any) => anime.mal_id !== animeId
-      );
-      const user = auth.currentUser;
-      if (user && user.email) {
-        updateDoc(doc(db, "users", user.email), {
-          savedShows: filteredAnimeArray,
-        });
-      }
-    } else {
-      alert("Please make sure you're logged in.");
+    if (!isUserLogged) return alert("Please make sure you're logged in.");
+    const filtered = userData.savedShows.filter(
+      (anime: any) => anime.mal_id !== id,
+    );
+    const user = auth.currentUser;
+    if (user?.email) {
+      updateDoc(doc(db, "users", user.email), { savedShows: filtered });
     }
   };
 
   useEffect(() => {
-    if (userData.savedShows.find((anime: any) => anime.mal_id === id)) {
-      setIsAnimeAdded(true);
-    } else {
-      setIsAnimeAdded(false);
-    }
+    setIsAnimeAdded(
+      !!userData.savedShows.find((anime: any) => anime.mal_id === id),
+    );
   }, [userData]);
-
-  const MotionLink = motion.create(Link);
 
   return (
     <motion.article
-      className="relative border-gray-900/20 grid grid-rows-subgrid rounded-xl row-span-4 drop-shadow overflow-hidden gap-2 p-3 bg-[#1b1b1b] border-2 hover:border-[#59B38E]"
+      className="group relative flex flex-col rounded-xl overflow-hidden bg-[#1b1b1b] border border-white/5 hover:border-emerald-200/50 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-300"
       variants={variantsForStaggeredAnimations}
       initial="initial"
       whileInView="animate"
       viewport={{ once: true }}
       custom={index}
     >
-      <MotionLink
-        className="relative group flex items-center justify-center hover:contrast-125 duration-500 border-gray-900/10 rounded-xl overflow-hidden"
-        to={`/anime/${id}/${formatToLinkType(name)}`}
+      {/* IMAGE */}
+      <Link to={`/anime/${id}/${formatToLinkType(name)}`}>
+        <div className="relative w-full aspect-[2/3] overflow-hidden">
+          <img
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            src={image}
+            alt={`${name} portrait`}
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+        </div>
+      </Link>
+
+      {/* FAV BUTTON */}
+      <motion.button
+        whileTap={{ scale: 0.85 }}
+        onClick={isAnimeAdded ? handleRemove : handleAdd}
+        className="absolute top-3 right-3 z-10 group/btn"
       >
-        {/* <div
-          key={`${isAnimeAdded}`}
-          className="text-emerald-200 hidden md:block absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-2 duration-500 tracking-wide text-sm gap-2 rounded-xl bottom-0 right-2"
+        <div
+          className={`relative p-2 rounded-xl backdrop-blur-md transition-all duration-300
+    ${
+      isAnimeAdded
+        ? "bg-emerald-200/15 border border-emerald-200/30"
+        : "bg-black/50 border border-white/10 hover:border-emerald-200/20 hover:bg-emerald-200/5"
+    }`}
         >
-          {isAnimeAdded ? (
-            <motion.button
-              whileTap={{ scale: 1.1 }}
-              onClick={(e) => handleRemoveFromMyAnimeList(id, e)}
-              className="hover:text-[#59B38E] duration-300 relative animate-appear"
-            >
-              <div className="before:opacity-0 before:text-[#59B38E] before:blur-[2px] before:hover:blur-0 before:w-[100px] before:-right-2 before:absolute hover:before:right-8 hover:before:opacity-100 before:duration-300 before:delay-200 before:content-['Anime_added']">
-                <DocumentCheckIcon className="size-5" />
-              </div>
-            </motion.button>
-          ) : (
-            <motion.button
-              whileTap={{ scale: 1.1 }}
-              onClick={(e) => handleAddToMyAnimeList(id, e)}
-              className="hover:text-[#59B38E] duration-300 relative animate-appear"
-            >
-              <div className="before:opacity-0 before:text-[#59B38E] before:blur-[2px] before:hover:blur-0 before:w-[100px] before:-right-2 before:absolute hover:before:right-8 hover:before:opacity-100 before:duration-300 before:delay-200 before:content-['Add_to_my_list']">
-                <HeartIcon className="size-5" />
-              </div>
-            </motion.button>
+          {/* ping cuando se agrega */}
+          {isAnimeAdded && (
+            <motion.span
+              className="absolute inset-0 rounded-xl border border-emerald-200/40"
+              initial={{ scale: 1, opacity: 0.6 }}
+              animate={{ scale: 1.5, opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            />
           )}
-        </div> */}
-        <img
-          className="w-[220px] h-[275px] -z-10 object-cover opacity-95 rounded-xl"
-          src={image}
-          alt={`${name} portrait image.`}
-        />
-      </MotionLink>
-      <div className="flex flex-col justify-end">
-        <p className="text-[#59B38E] text-[13px]">
-          {adaptString(genresElementsToString, 34)}
+
+          <motion.div
+            animate={
+              isAnimeAdded
+                ? { scale: [1, 1.3, 1], rotate: [0, -10, 0] }
+                : { scale: 1, rotate: 0 }
+            }
+            transition={{ duration: 0.3 }}
+          >
+            {isAnimeAdded ? (
+              <HeartIcon className="size-3.5 text-emerald-200" />
+            ) : (
+              <HeartIcon className="size-3.5 text-white/30 group-hover/btn:text-emerald-200/60 transition-colors duration-300" />
+            )}
+          </motion.div>
+        </div>
+      </motion.button>
+      {/* INFO */}
+      <div className="flex flex-col gap-0.5 px-3 py-2.5">
+        <p className="text-[10px] uppercase tracking-[0.15em] text-[#59B38E]/70 font-medium truncate">
+          {adaptString(genresString, 30)}
         </p>
-      </div>
-      <div className="flex justify-between items-center">
-        <h2>{adaptString(name, 20)}</h2>
-        <p
-          key={`${isAnimeAdded}`}
-          className=" text-emerald-200/60 text-sm md:text-base"
-        >
-          {isAnimeAdded ? (
-            <motion.button
-              whileTap={{ scale: 1.1 }}
-              onClick={(e) => handleRemoveFromMyAnimeList(id, e)}
-              className="hover:text-[#59B38E] duration-300 relative animate-appear"
-            >
-              <DocumentCheckIcon className="size-5" />
-            </motion.button>
-          ) : (
-            <motion.button
-              whileTap={{ scale: 1.1 }}
-              onClick={(e) => handleAddToMyAnimeList(id, e)}
-              className="hover:text-[#59B38E] duration-300 relative animate-appear"
-            >
-              <HeartIcon className="size-5" />
-            </motion.button>
-          )}
-        </p>
-      </div>
-      <div className="text-emerald-200/90 font-serif">
-        <p className="text-gray-300/80 text-sm capitalize p2">{japanese}</p>
+        <h2 className="text-sm font-bold text-white/90 leading-snug line-clamp-2">
+          {name}
+        </h2>
+        <p className="text-[11px] text-white/25 truncate mt-0.5">{japanese}</p>
       </div>
     </motion.article>
   );
