@@ -26,5 +26,7 @@ A full-stack anime discovery app built with React and TypeScript. Search any ani
 ## 🚀 Run locally
 
 ```bash
-
+git clone https://github.com/Xaida02/anime-index-typescript.git
+cd anime-index-typescript
+npm install
 ```
